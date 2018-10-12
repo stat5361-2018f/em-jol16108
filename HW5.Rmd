@@ -141,7 +141,8 @@ regmix_em = function(y, xmat, pi.init , beta.init, sigma.init,
 }  
 ```
 
-#Generate data with the following and estimate the parameters
+# Generate data with the following and estimate the parameters
+
 ```{r}
 regmix_sim <- function(n, pi, beta, sigma) {
     K <- ncol(beta)
