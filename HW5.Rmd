@@ -1,0 +1,174 @@
+---
+title: "HW5 - Exercise5"
+author: JooChul Lee
+date: "`r format(Sys.time(), '%d %B %Y')`"
+documentclass: article
+knit: "bookdown::render_book('Exercise2.Rmd', 'bookdown::pdf_document2')"
+fontsize: 11pt
+papersize: letter
+---
+
+
+```{r setup, echo = FALSE, message = FALSE, warning = FALSE}
+
+## for latex and html output
+isHtml <- knitr::is_html_output()
+isLatex <- knitr::is_latex_output()
+latex <- ifelse(isLatex, '\\LaTeX\\', 'LaTeX')
+
+## specify global chunk options
+knitr::opts_chunk$set(fig.width = 5, fig.height = 4, dpi = 300,
+                      out.width = "90%", fig.align = "center")
+
+```
+
+# Follow the lecture notes to verify the validity of the provided E- and M-steps. 
+
+
+\begin{align}
+    Q(\boldsymbol{\Psi}\mid \boldsymbol{\Psi}^{(k)}) &= E[l_{n}^{c}(\boldsymbol{\Psi})|\bold{x},\bold{y},\boldsymbol{\Psi}^{(k)}]\\
+         &= \sum_{z}P(z|\bold{x},\bold{y},\boldsymbol{\Psi}^{(k)})l_{n}^{c}(\boldsymbol{\Psi})\\
+         &= \sum_{i=1}^{n}\sum_{j=1}^{m}\sum_{k=0}^{1}P(z_{ij} = k|\bold{x},\bold{y},\boldsymbol{\Psi}^{(k)})k\log\left\{\pi_{j}\phi(y_{i}-\mathbf{x}_{i}^{\top}\boldsymbol{\beta}_{j};0,\sigma^{2})\right\} \\
+         &= \sum_{i=1}^{n}\sum_{j=1}^{m}P(z_{ij} = 1|\bold{x},\bold{y},\boldsymbol{\Psi}^{(k)})\log\left\{\pi_{j}\phi(y_{i}-\mathbf{x}_{i}^{\top}\boldsymbol{\beta}_{j};0,\sigma^{2})\right\}\\
+         &= \sum_{i=1}^{n}\sum_{j=1}^{m}E[z_{ij}|\bold{x},\bold{y},\boldsymbol{\Psi}^{(k)}]\log\left\{\pi_{j}\phi(y_{i}-\mathbf{x}_{i}^{\top}\boldsymbol{\beta}_{j};0,\sigma^{2})\right\} \\
+         &= \sum_{i=1}^{n}\sum_{j=1}^{m}\dfrac{P(z_{ij}=1,\bold{x}_i,y_i|\boldsymbol{\Psi}^{(k)})}{P(\bold{x}_i,y_i|\boldsymbol{\Psi}^{(k)})}\log\left\{\pi_{j}\phi(y_{i}-\mathbf{x}_{i}^{\top}\boldsymbol{\beta}_{j};0,\sigma^{2})\right\}\\
+         &= \sum_{i=1}^{n}\sum_{j=1}^{m}\dfrac{\pi_{j}^{(k)}\phi(y_{i}-\mathbf{x}_{i}^{\top}\boldsymbol{\beta}_{j}^{(k)};0,\sigma^{2^{(k)}})}{\sum_{j=1}^{m}\pi_{j}^{(k)}\phi(y_{i}-\mathbf{x}_{i}^{\top}\boldsymbol{\beta}_{j}^{(k)};0,\sigma^{2^{(k)}})}\log\left\{\pi_{j}\phi(y_{i}-\mathbf{x}_{i}^{\top}\boldsymbol{\beta}_{j};0,\sigma^{2})\right\}\\
+         &= \sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\left\{\log\pi_{j}+ \log\phi(y_{i}-\mathbf{x}_{i}^{\top}\boldsymbol{\beta}_{j};0,\sigma^{2})\right\}
+\end{align}
+
+Now, Maximize $Q(\boldsymbol{\Psi}\mid \boldsymbol{\Psi}^{(k)})$.
+
+For the $\pi_{j}^{(k+1)}$ and $j = 1,\ldots,m-1$,
+
+\begin{align}
+    \dfrac{\partial}{\partial \pi_{j}}Q(\boldsymbol{\Psi}\mid \boldsymbol{\Psi}^{(k)}) 
+    &= \dfrac{\partial}{\partial \pi_{j}}(\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\log\pi_{j} + \bold{C}), (\bold{C} \; is\; not \; related \; to \;\pi_{j}) \\
+    &= \dfrac{\partial}{\partial \pi_{j}}\{\sum_{i=1}^{n}\sum_{j=1}^{m-1}p_{ij}^{(k+1)}\log\pi_{j} + \sum_{i=1}^{n}p_{im}^{(k+1)}\log(1-\pi_{1}-\ldots -\pi_{m-1})\}\\
+    &= \dfrac{\sum_{i=1}^{n}p_{ij}^{(k+1)}}{\pi_{j}}-\dfrac{\sum_{i=1}^{n}p_{im}^{(k+1)}}{\pi_{m}} \\
+    &= 0
+\end{align}
+
+From (11) and (12), 
+\begin{align}
+\dfrac{\sum_{i=1}^{n}p_{ij}^{(k+1)}}{\pi_{j}} = \dfrac{\sum_{i=1}^{n}p_{im}^{(k+1)}}{\pi_{m}}
+\end{align}
+
+Then, 
+\begin{align}
+\sum_{j=1}^{m}\sum_{i=1}^{n}p_{ij}^{(k+1)}&=\sum_{j=1}^{m}{\pi_{j}}\dfrac{\sum_{i=1}^{n}p_{im}^{(k+1)}}{\pi_{m}} \\
+   &= \dfrac{\sum_{i=1}^{n}p_{im}^{(k+1)}}{\pi_{m}}
+\end{align}
+
+Also, we know that 
+\begin{align}
+\sum_{j=1}^{m}\sum_{i=1}^{n}p_{ij}^{(k+1)}&=\sum_{i=1}^{n}1\\
+   &= n
+\end{align}
+
+Then from (14-17), 
+\begin{align}
+   \dfrac{\sum_{i=1}^{n}p_{im}^{(k+1)}}{\pi_{m}} = n
+\end{align}
+
+From (13) and (18),
+\begin{align}
+   \dfrac{\sum_{i=1}^{n}p_{ij}^{(k+1)}}{\pi_{j}} = n
+\end{align}
+
+
+Thus, from (18) and (19),
+
+$$\pi_{j}^{(k+1)} = \dfrac{\sum_{i=1}^{n}p_{ij}^{(k+1)}}{n} \;  for \; j =1,\ldots,m$$
+
+For the $\beta_{j}^{(k+1)}$,
+
+\begin{align}
+    \dfrac{\partial}{\partial \beta_{j}}Q(\boldsymbol{\Psi}\mid \boldsymbol{\Psi}^{(k)}) 
+    &= \dfrac{\partial}{\partial \beta_{j}}(-\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\frac{(y_i-\bold{x}_i^\prime \beta_j)^2}{\sigma^2} + \bold{C}), (\bold{C} \; is\; not \; related \; to \;\beta_{j}) \\
+    &=  -\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\bold{x}_i\frac{(y_i-\bold{x}_i^\prime \beta_j)}{\sigma^2}\\
+    &= 0
+\end{align}
+
+From (21) and (22),
+\begin{align}
+\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\bold{x}_i(y_i-\bold{x}_i^\prime \beta_j) = 0
+\end{align}
+
+Thus,for $j =1,\ldots,m$
+$$\beta_{j}^{(k+1)} = \left(\sum_{i=1}^{n}\mathbf{x}_i\mathbf{x}_{i}^{\prime}p_{ij}^{(k+1)}\right)^{-1}\left(\sum_{i=1}^{n}\mathbf{x}_ip_{ij}^{(k+1)}y_i\right)$$
+For the $\sigma^{2^{(k+1)}}$,
+
+\begin{align}
+    \dfrac{\partial}{\partial \sigma^{2}}Q(\boldsymbol{\Psi}\mid \boldsymbol{\Psi}^{(k)}) 
+    &= \dfrac{\partial}{\partial \sigma^{2}}(-\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)} log\sigma^2-\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\frac{(y_i-\bold{x}_i^\prime \beta_{j}^{(k+1)})^2}{\sigma^2} + \bold{C}), (\bold{C} \; is\; not \; related \; to \;\sigma^{2}) \\
+    &= -\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\frac{1}{\sigma^2} +\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\frac{(y_i-\bold{x}_i^\prime \beta_{j}^{(k+1)})^2}{\sigma^4}\\
+    &= 0
+\end{align}
+
+From (25) and (26),
+\begin{align}
+\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\frac{1}{\sigma^2}=\frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}\frac{(y_i-\bold{x}_i^\prime \beta_{j}^{(k+1)})^2}{\sigma^4}
+\end{align}
+
+From (27), since $\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}=n$,
+$$\sigma^{2^{(k+1)}} = \dfrac{\sum_{i=1}^{n}\sum_{j=1}^{m}p_{ij}^{(k+1)}(y_i-\bold{x}_i^\prime \beta_{j}^{(k+1)})^2}{n}$$
+
+
+# Algorithm in R with a function regmix_em
+
+```{r}
+regmix_em = function(y, xmat, pi.init , beta.init, sigma.init,
+                     control = list(maxit = 500, tol = 1e-5))
+{
+   current.pi = pi.init; new.beta<- current.beta <- beta.init; current.sigma = sigma.init
+   xmat = as.matrix(xmat)
+   p = matrix(0,length(y),length(pi.init))
+   for(k in 1:control$maxit)
+   {   
+      for(i in 1:length(pi.init))
+         p[,i] = current.pi[i] * dnorm(y - xmat %*% current.beta[,i],0,current.sigma)
+      new.p =  p/rowSums(p)
+      new.pi = colMeans(new.p)
+      for(j in 1:length(pi.init))
+         new.beta[,j] = solve(t(xmat * new.p[,j]) %*% xmat ) %*% t(xmat * new.p[,j] ) %*% y
+      new.sigma = sqrt(sum(new.p * (y  %*% t(rep(1, length(pi.init))) 
+                                    - xmat %*% new.beta)^2)/length(y))   
+      if( sqrt(sum((current.pi - new.pi)^2) + sum((current.beta - new.beta)^2) + 
+         sum((current.sigma - new.sigma)^2)) < control$tol ) break
+      current.pi = new.pi; current.beta = new.beta; current.sigma = new.sigma
+   }
+   return(list(pi = current.pi, beta = current.beta, sigma = current.sigma, iter = k))
+}  
+```
+
+#Generate data with the following and estimate the parameters
+```{r}
+regmix_sim <- function(n, pi, beta, sigma) {
+    K <- ncol(beta)
+    p <- NROW(beta)
+    xmat <- matrix(rnorm(n * p), n, p) # normal covaraites
+    error <- matrix(rnorm(n * K, sd = sigma), n, K)
+    ymat <- xmat %*% beta + error # n by K matrix
+    ind <- t(rmultinom(n, size = 1, prob = pi))
+    y <- rowSums(ymat * ind)
+    data.frame(y, xmat)
+}
+n <- 400
+pi <- c(.3, .4, .3)
+bet <- matrix(c( 1,  1,  1, 
+                 -1, -1, -1), 2, 3)
+sig <- 1
+set.seed(1205)
+dat <- regmix_sim(n, pi, bet, sig)
+regmix_em(y = dat[,1], xmat = dat[,-1], pi.init = pi / pi / length(pi), 
+          beta.init = bet * 0, sigma.init = sig/sig, control = list(maxit = 500, tol = 1e-5))
+```
+
+When the given initial values from the question is used, the estimated betas are the same. And the estimated $\pi$s are same and the estimated sigma is 1.73249. The number of iteration is 2.
+
+```{r}
+regmix_em(y = dat[,1], xmat = dat[,-1], pi.init = pi / pi / length(pi), 
+          beta.init = matrix(-2:3,2,3), sigma.init = sig/sig, 
+          control = list(maxit = 500, tol = 1e-5))
+```
+I also tried it with the different initial values for betas. So, the estimated values are diffrent from the above. The number of the iteration is 63.
